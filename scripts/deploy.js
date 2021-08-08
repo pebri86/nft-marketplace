@@ -4,8 +4,13 @@
 // When running the script with `npx hardhat run <script>` you'll find the Hardhat
 // Runtime Environment's members available in the global scope.
 const hre = require("hardhat");
+const fs = require("fs");
 
 async function main() {
+  const [deployer] = await ethers.getSigners();
+  console.log("Deploying contracts with the account:", deployer.address);
+  console.log("Account balance:", (await deployer.getBalance()).toString());
+
   const NFTMarket = await hre.ethers.getContractFactory("NFTMarket");
   const nftMarket = await NFTMarket.deploy();
   await nftMarket.deployed();
@@ -15,6 +20,14 @@ async function main() {
   const nft = await NFT.deploy(nftMarket.address);
   await nft.deployed();
   console.log("nft deployed to:", nft.address);
+
+  let config = `
+  export const nftmarketaddress = "${nftMarket.address}";
+  export const nftaddress = "${nft.address}";
+  `
+
+  let data = JSON.stringify(config);
+  fs.writeFileSync('config.js', JSON.parse(data));
 }
 
 // We recommend this pattern to be able to use async/await everywhere
