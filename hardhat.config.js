@@ -9,6 +9,10 @@ module.exports = {
     hardhat: {
       chainId: 1337,
     },
+    peruritestnet: {
+      url: infuraProjectId,
+      accounts: [privateKey],
+    },
     mumbai: {
       url: `https://polygon-mumbai.infura.io/v3/${infuraProjectId}`,
       accounts: [privateKey],
